@@ -4,7 +4,6 @@ import (
 	"fmt"
 	fetch "getdata"
 	"log"
-	"regexp"
 	"strconv"
 	"strings"
 )
@@ -14,6 +13,11 @@ var fileName = fetch.Filename(url)
 var fileExists = fetch.CheckFileExists(fileName)
 var session = fetch.Grabsession()
 var input = fetch.Getfile(fileExists, fileName, url, session)
+
+func isNumeric(s string) bool {
+	_, err := strconv.Atoi(s)
+	return err == nil
+}
 
 // part two
 var numDict = map[string]string{
@@ -28,59 +32,33 @@ var numDict = map[string]string{
 	"nine":  "9",
 }
 
-func isNumeric(s string) bool {
-	_, err := strconv.Atoi(s)
-	return err == nil
-}
+var calibrationValuePartOne int
+var calibrationValuePartTwo int
 
 func main() {
 	input = strings.TrimSpace(input)
 	data := strings.Split(input, "\n")
-	calibrationValuePartOne := 0
-	calibrationValuePartTwo := 0
-	reg, err := regexp.Compile("[^0-9]+")
-	if err != nil {
-		log.Fatal(err)
-	}
-	regTwo, err := regexp.Compile("(one|two|three|four|five|six|seven|eight|nine|[0-9])")
-	if err != nil {
-		log.Fatal(err)
-	}
+
 	for _, v := range data {
-		tmp := strings.Split(reg.ReplaceAllString(v, ""), "")
-		tmpPartTwo := regTwo.FindAllString(v, -1)
-		if len(tmp) > 1 {
-			firstDigit := tmp[0]
-			lastDigit := tmp[len(tmp)-1]
-			digit, _ := strconv.Atoi(firstDigit + lastDigit)
-			calibrationValuePartOne += digit
-		} else {
-			firstDigit := tmp[0]
-			digit, _ := strconv.Atoi(firstDigit + firstDigit)
-			calibrationValuePartOne += digit
-		}
-		//par two
-		if len(tmpPartTwo) > 1 {
-			firstDigitPartTwoStr := tmpPartTwo[0]
-			lastDigitPartTwoStr := tmpPartTwo[len(tmpPartTwo)-1]
-
-			if val, ok := numDict[firstDigitPartTwoStr]; ok {
-				firstDigitPartTwoStr = val
+		partOne := []string{}
+		//partTwo := []string{}
+		for i := range v {
+			fmt.Println(v)
+			currentChar := string(v[i])
+			if isNumeric(currentChar) {
+				partOne = append(partOne, currentChar)
 			}
+			stringRemains := v[i:]
+			fmt.Println(stringRemains)
 
-			if val, ok := numDict[lastDigitPartTwoStr]; ok {
-				lastDigitPartTwoStr = val
-			}
-			digit, _ := strconv.Atoi(firstDigitPartTwoStr + lastDigitPartTwoStr)
-			calibrationValuePartTwo += digit
-		} else {
-			firstDigitPartTwoStr := tmpPartTwo[0]
-			digit, _ := strconv.Atoi(firstDigitPartTwoStr + firstDigitPartTwoStr)
-			calibrationValuePartTwo += digit
 		}
-		fmt.Println(v, tmpPartTwo)
+		partOneDigit, err := strconv.Atoi(partOne[0] + partOne[len(partOne)-1])
+		if err != nil {
+			log.Fatal(err)
+		}
+		calibrationValuePartOne += partOneDigit
+
 	}
-	//part two
 
 	fmt.Println("Part One =>", calibrationValuePartOne)
 	fmt.Println("Part Two =>", calibrationValuePartTwo)

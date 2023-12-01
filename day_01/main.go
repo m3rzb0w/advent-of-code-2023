@@ -20,7 +20,7 @@ func isNumeric(s string) bool {
 }
 
 // part two
-var numDict = map[string]string{
+var mapNum = map[string]string{
 	"one":   "1",
 	"two":   "2",
 	"three": "3",
@@ -32,34 +32,40 @@ var numDict = map[string]string{
 	"nine":  "9",
 }
 
-var calibrationValuePartOne int
-var calibrationValuePartTwo int
+var calibrationValuesPartOne int
+var calibrationValuesPartTwo int
 
 func main() {
 	input = strings.TrimSpace(input)
 	data := strings.Split(input, "\n")
-
 	for _, v := range data {
 		partOne := []string{}
-		//partTwo := []string{}
+		partTwo := []string{}
 		for i := range v {
-			fmt.Println(v)
 			currentChar := string(v[i])
 			if isNumeric(currentChar) {
 				partOne = append(partOne, currentChar)
+				partTwo = append(partTwo, currentChar) //part two
 			}
-			stringRemains := v[i:]
-			fmt.Println(stringRemains)
+			//part two
+			for key, val := range mapNum {
+				if strings.HasPrefix(v[i:], key) {
+					partTwo = append(partTwo, val)
+				}
+			}
 
 		}
 		partOneDigit, err := strconv.Atoi(partOne[0] + partOne[len(partOne)-1])
 		if err != nil {
 			log.Fatal(err)
 		}
-		calibrationValuePartOne += partOneDigit
-
+		partTwoDigit, err := strconv.Atoi(partTwo[0] + partTwo[len(partTwo)-1])
+		if err != nil {
+			log.Fatal(err)
+		}
+		calibrationValuesPartOne += partOneDigit
+		calibrationValuesPartTwo += partTwoDigit
 	}
-
-	fmt.Println("Part One =>", calibrationValuePartOne)
-	fmt.Println("Part Two =>", calibrationValuePartTwo)
+	fmt.Println("Part One =>", calibrationValuesPartOne)
+	fmt.Println("Part Two =>", calibrationValuesPartTwo)
 }

@@ -1,4 +1,5 @@
 go 1.21.4
 
 use ./day_01
+use ./day_02
 use ./getdada

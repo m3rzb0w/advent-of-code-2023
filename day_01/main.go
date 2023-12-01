@@ -53,7 +53,6 @@ func main() {
 					partTwo = append(partTwo, val)
 				}
 			}
-
 		}
 		partOneDigit, err := strconv.Atoi(partOne[0] + partOne[len(partOne)-1])
 		if err != nil {

@@ -65,6 +65,6 @@ func main() {
 		calibrationValuesPartOne += partOneDigit
 		calibrationValuesPartTwo += partTwoDigit
 	}
-	fmt.Println("Part One =>", calibrationValuesPartOne)
-	fmt.Println("Part Two =>", calibrationValuesPartTwo)
+	fmt.Println("Part one =>", calibrationValuesPartOne)
+	fmt.Println("Part two =>", calibrationValuesPartTwo)
 }

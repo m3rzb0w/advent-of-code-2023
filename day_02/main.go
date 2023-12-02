@@ -15,28 +15,20 @@ var fileExists = fetch.CheckFileExists(fileName)
 var session = fetch.Grabsession()
 var input = fetch.Getfile(fileExists, fileName, url, session)
 
-//12 red cubes, 13 green cubes, and 14 blue cubes
+var countPartOne, countPartTwo int
 
-type Game struct {
-	ID    int
-	Red   int
-	Green int
-	Blue  int
-	Set   int
-}
-
+// part 1
 const maxRedCubesPartOne int = 12
 const maxGreenCubesPartOne int = 13
 const maxBlueCubesPartOne int = 14
 
-var countPartOne, countPartTwo int
+// part 2
 var fewRed, fewGreen, fewBlue int
 
 func main() {
 	input = strings.TrimSpace(input)
 	data := strings.Split(input, "\n")
 	for _, v := range data {
-		var game Game
 		currentGame := strings.Split(v, ";")
 		re := regexp.MustCompile(`(?:Game\s)(\d+)`)
 		reRed := regexp.MustCompile(`(\d+)(?:\sred)`)
@@ -46,7 +38,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		game.ID = gameId
+
 		for _, set := range currentGame {
 			var currentRed int
 			var currentGreen int
@@ -62,11 +54,10 @@ func main() {
 			}
 
 			if currentRed > maxRedCubesPartOne || currentGreen > maxGreenCubesPartOne || currentBlue > maxBlueCubesPartOne {
-				fmt.Println("Game is KO", game.ID)
-				game.ID = 0
+				gameId = 0
 
 			}
-
+			//part two
 			if currentRed > fewRed {
 				fewRed = currentRed
 			}
@@ -78,15 +69,13 @@ func main() {
 			if currentGreen > fewGreen {
 				fewGreen = currentGreen
 			}
-
-			fmt.Println(currentRed, currentGreen, currentBlue)
 		}
-		countPartOne += game.ID
+		countPartOne += gameId
 		countPartTwo += fewRed * fewBlue * fewGreen
 		fewRed = 0
 		fewBlue = 0
 		fewGreen = 0
 	}
-	fmt.Println("Part one => ", countPartOne)
+	fmt.Println("Part one =>", countPartOne)
 	fmt.Println("Part two =>", countPartTwo)
 }

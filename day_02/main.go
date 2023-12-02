@@ -29,7 +29,8 @@ const maxRedCubesPartOne int = 12
 const maxGreenCubesPartOne int = 13
 const maxBlueCubesPartOne int = 14
 
-var countPartOne int
+var countPartOne, countPartTwo int
+var fewRed, fewGreen, fewBlue int
 
 func main() {
 	input = strings.TrimSpace(input)
@@ -66,9 +67,26 @@ func main() {
 
 			}
 
+			if currentRed > fewRed {
+				fewRed = currentRed
+			}
+
+			if currentBlue > fewBlue {
+				fewBlue = currentBlue
+			}
+
+			if currentGreen > fewGreen {
+				fewGreen = currentGreen
+			}
+
 			fmt.Println(currentRed, currentGreen, currentBlue)
 		}
 		countPartOne += game.ID
-		fmt.Println("Part one => ", countPartOne)
+		countPartTwo += fewRed * fewBlue * fewGreen
+		fewRed = 0
+		fewBlue = 0
+		fewGreen = 0
 	}
+	fmt.Println("Part one => ", countPartOne)
+	fmt.Println("Part two =>", countPartTwo)
 }

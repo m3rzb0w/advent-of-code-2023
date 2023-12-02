@@ -18,9 +18,11 @@ var input = fetch.Getfile(fileExists, fileName, url, session)
 var countPartOne, countPartTwo int
 
 // part 1
-const maxRedCubesPartOne int = 12
-const maxGreenCubesPartOne int = 13
-const maxBlueCubesPartOne int = 14
+const (
+	maxRedCubesPartOne   int = 12
+	maxGreenCubesPartOne int = 13
+	maxBlueCubesPartOne  int = 14
+)
 
 // part 2
 var fewRed, fewGreen, fewBlue int

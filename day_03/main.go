@@ -30,11 +30,17 @@ func main() {
 	input = strings.TrimSpace(input)
 	data := strings.Split(input, "\n")
 	sympolsPos := []Symbol{}
+	gearsPos := []Symbol{}
 	for i, v := range data {
 		for j, char := range v {
 			if !unicode.IsNumber(char) && string(char) != "." {
 				symbol := Symbol{x: j, y: i, val: string(char)}
 				sympolsPos = append(sympolsPos, symbol)
+			}
+			//part two
+			if string(char) == "*" {
+				gear := Symbol{x: j, y: i, val: string(char)}
+				gearsPos = append(gearsPos, gear)
 			}
 		}
 	}
@@ -96,4 +102,65 @@ func main() {
 	fmt.Println(sum)
 	// fmt.Println(string(data[0][3]))
 	//hith => 533763
+	fmt.Println(gearsPos)
+	numsGearCollected := []string{}
+	visitedGear := make(map[Pos]bool)
+	gearCount := make(map[Symbol][]string)
+	for _, g := range gearsPos {
+		for _, move := range [][]int{{1, 0}, {0, -1}, {-1, 0}, {0, 1}, {-1, -1}, {-1, 1}, {1, 1}, {1, -1}} { // down left up right..etc
+			j, i := move[1], move[0]
+			currentPos := Pos{g.x + j, g.y + i}
+			// fmt.Println(currentPos, s.val, s.x, s.y, string(data[currentPos.y][currentPos.x]))
+			currentChar := data[currentPos.y][currentPos.x]
+			if unicode.IsNumber(rune(currentChar)) {
+				tmpGearCollect := []string{}
+				// fmt.Println(foundGear)
+				//visited[currentPos] = true
+				// fmt.Println(currentPos, s.val, s.x, s.y, string(data[currentPos.y][currentPos.x]))
+				for i := currentPos.x; i < len(data[currentPos.y]); i++ {
+					newPos := Pos{currentPos.y, i}
+					// fmt.Println(string(data[currentPos.y][i]))
+					if unicode.IsNumber(rune(data[currentPos.y][i])) && !visitedGear[newPos] {
+						visitedGear[newPos] = true
+						tmpGearCollect = append(tmpGearCollect, string(data[currentPos.y][i]))
+					} else {
+						break
+					}
+				}
+
+				for j := currentPos.x - 1; j >= 0; j-- {
+					newPosBack := Pos{currentPos.y, j}
+					// fmt.Println("TESTBACKWARD===>", j, string(data[currentPos.y][j]), currentPos.x)
+					// fmt.Println(currentPos, s.val, s.x, s.y, string(data[currentPos.y][currentPos.x]))
+					if unicode.IsNumber(rune(data[currentPos.y][j])) && !visitedGear[newPosBack] {
+						visitedGear[newPosBack] = true
+						tmpGearCollect = append([]string{string(data[currentPos.y][j])}, tmpGearCollect...)
+					} else {
+						break
+					}
+
+				}
+				// fmt.Println("tmpdigicolelct", tmpDigitCollect, len(tmpDigitCollect))
+				if len(tmpGearCollect) > 0 {
+					numGear := strings.Join(tmpGearCollect, "")
+					numsGearCollected = append(numsGearCollected, numGear)
+					gearCount[g] = append(gearCount[g], numGear)
+					fmt.Println(g, numGear)
+				}
+
+			}
+		}
+	}
+	fmt.Println(numsGearCollected)
+	fmt.Println(gearCount)
+	ans := 0
+	for _, gear := range gearCount {
+		fmt.Println(gear)
+		if len(gear) == 2 {
+			n1, _ := strconv.Atoi(gear[0])
+			n2, _ := strconv.Atoi(gear[1])
+			ans += (n1 * n2)
+		}
+	}
+	fmt.Println(ans)
 }

@@ -40,9 +40,9 @@ func (symbols *SymbolSlice) FindNumbers(data []string) map[Symbol][]int {
 				numberCollector := []string{}
 				// move forward
 				for i := currentPos.x; i < len(data[currentPos.y]); i++ {
-					newPos := Position{currentPos.y, i}
-					if unicode.IsNumber(rune(data[currentPos.y][i])) && !visited[newPos] {
-						visited[newPos] = true
+					newPosForward := Position{currentPos.y, i}
+					if unicode.IsNumber(rune(data[currentPos.y][i])) && !visited[newPosForward] {
+						visited[newPosForward] = true
 						numberCollector = append(numberCollector, string(data[currentPos.y][i]))
 					} else {
 						break
@@ -50,9 +50,9 @@ func (symbols *SymbolSlice) FindNumbers(data []string) map[Symbol][]int {
 				}
 				// move backward
 				for j := currentPos.x - 1; j >= 0; j-- {
-					newPosBack := Position{currentPos.y, j}
-					if unicode.IsNumber(rune(data[currentPos.y][j])) && !visited[newPosBack] {
-						visited[newPosBack] = true
+					newPosBackward := Position{currentPos.y, j}
+					if unicode.IsNumber(rune(data[currentPos.y][j])) && !visited[newPosBackward] {
+						visited[newPosBackward] = true
 						numberCollector = append([]string{string(data[currentPos.y][j])}, numberCollector...)
 					} else {
 						break

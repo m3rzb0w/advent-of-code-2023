@@ -84,16 +84,12 @@ func main() {
 	fmt.Println("MinLOCone =>", minLoc)
 
 	var refLoc int
-	// locsTwo := make([]int, 0)
 	for i, seed := range seeds {
 		if i%2 == 0 {
 			currSeed := seed
 			currLoop := seeds[i+1] + currSeed
-			// fmt.Println(currSeed, currLoop)
 			for currSeed < currLoop {
-				// fmt.Println(currSeed)
 				loc := findLoc(currSeed)
-				// locsTwo = append(locsTwo, loc)
 				if loc < refLoc || refLoc == 0 {
 					refLoc = loc
 				}
@@ -102,12 +98,5 @@ func main() {
 		}
 	}
 	fmt.Println(refLoc)
-	// minLocTwo := locsTwo[0]
-	// for _, loc := range locsTwo {
-	// 	if loc < minLocTwo {
-	// 		minLocTwo = loc
-	// 	}
-	// }
-	// fmt.Println("mintwo=>", minLocTwo)
 
 }

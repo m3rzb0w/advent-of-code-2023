@@ -1,7 +1,9 @@
-go 1.21.4
+go 1.21.5
 
 use ./day_01
 use ./day_02
 use ./day_03
 use ./day_04
+use ./day_05
+use ./day_06
 use ./getdada

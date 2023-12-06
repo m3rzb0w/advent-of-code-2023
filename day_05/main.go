@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	fetch "getdata"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -14,164 +13,101 @@ var fileExists = fetch.CheckFileExists(fileName)
 var session = fetch.Grabsession()
 var input = fetch.Getfile(fileExists, fileName, url, session)
 
-func isNumeric(s string) bool {
-	_, err := strconv.Atoi(s)
-	return err == nil
-}
-
 func main() {
-	input = strings.TrimSpace(input)
-	data := strings.Split(input, "\n")
 
-	seeds := []int{}
-	soilToFertilizer := [][]int{}
-	fertilizerToWater := [][]int{}
-	waterToLight := [][]int{}
-	lightToTemperature := [][]int{}
-	temperatureToHumidity := [][]int{}
-	humidityToLocation := [][]int{}
+	lines := strings.Split(strings.TrimSpace(string(input)), "\n")
 
-	var currentCat string
-	for _, v := range data {
-		if strings.Contains(v, "seeds:") {
-			s := strings.Split(v, " ")
-			for _, v := range s {
-				if !strings.Contains(v, "seeds:") {
-					seednum, err := strconv.Atoi(v)
-					if err != nil {
-						log.Fatal(err)
-					}
-					seeds = append(seeds, seednum)
-				}
-			}
-		}
-
-		if strings.Contains(v, "seed-to-soil map:") || currentCat == "seed-to-soil map:" {
-			currentCat = "seed-to-soil map:"
-			s := strings.Split(v, " ")
-			tmpsts := []int{}
-			for _, v := range s {
-				if isNumeric(v) {
-					sts, err := strconv.Atoi(v)
-					if err != nil {
-						log.Fatal(err)
-					}
-					tmpsts = append(tmpsts, sts)
-				}
-			}
-			if len(tmpsts) > 0 {
-				soilToFertilizer = append(soilToFertilizer, tmpsts)
-			}
-
-		}
-
-		if strings.Contains(v, "soil-to-fertilizer map:") || currentCat == "soil-to-fertilizer map:" {
-			currentCat = "soil-to-fertilizer map:"
-			s := strings.Split(v, " ")
-			tmpsts := []int{}
-			for _, v := range s {
-				if isNumeric(v) {
-					sts, err := strconv.Atoi(v)
-					if err != nil {
-						log.Fatal(err)
-					}
-					tmpsts = append(tmpsts, sts)
-				}
-			}
-			if len(tmpsts) > 0 {
-				fertilizerToWater = append(fertilizerToWater, tmpsts)
-			}
-
-		}
-
-		if strings.Contains(v, "water-to-light map:") || currentCat == "water-to-light map:" {
-			currentCat = "water-to-light map:"
-			s := strings.Split(v, " ")
-			tmpsts := []int{}
-			for _, v := range s {
-				if isNumeric(v) {
-					sts, err := strconv.Atoi(v)
-					if err != nil {
-						log.Fatal(err)
-					}
-					tmpsts = append(tmpsts, sts)
-				}
-			}
-			if len(tmpsts) > 0 {
-				waterToLight = append(waterToLight, tmpsts)
-			}
-
-		}
-
-		if strings.Contains(v, "light-to-temperature map:") || currentCat == "light-to-temperature map:" {
-			currentCat = "light-to-temperature map:"
-			s := strings.Split(v, " ")
-			tmpsts := []int{}
-			for _, v := range s {
-				if isNumeric(v) {
-					sts, err := strconv.Atoi(v)
-					if err != nil {
-						log.Fatal(err)
-					}
-					tmpsts = append(tmpsts, sts)
-				}
-			}
-			if len(tmpsts) > 0 {
-				lightToTemperature = append(lightToTemperature, tmpsts)
-			}
-
-		}
-
-		if strings.Contains(v, "temperature-to-humidity map:") || currentCat == "temperature-to-humidity map:" {
-			currentCat = "temperature-to-humidity map:"
-			s := strings.Split(v, " ")
-			tmpsts := []int{}
-			for _, v := range s {
-				if isNumeric(v) {
-					sts, err := strconv.Atoi(v)
-					if err != nil {
-						log.Fatal(err)
-					}
-					tmpsts = append(tmpsts, sts)
-				}
-			}
-			if len(tmpsts) > 0 {
-				temperatureToHumidity = append(temperatureToHumidity, tmpsts)
-			}
-
-		}
-
-		if strings.Contains(v, "humidity-to-location map:") || currentCat == "humidity-to-location map:" {
-			currentCat = "humidity-to-location map:"
-			s := strings.Split(v, " ")
-			tmpsts := []int{}
-			for _, v := range s {
-				if isNumeric(v) {
-					sts, err := strconv.Atoi(v)
-					if err != nil {
-						log.Fatal(err)
-					}
-					tmpsts = append(tmpsts, sts)
-				}
-			}
-			if len(tmpsts) > 0 {
-				humidityToLocation = append(humidityToLocation, tmpsts)
-			}
-
-		}
-
-		if len(v) == 0 {
-			currentCat = ""
-		}
+	seedStr := strings.Split(lines[0], " ")[1:]
+	seeds := make([]int, len(seedStr))
+	for i, s := range seedStr {
+		seeds[i], _ = strconv.Atoi(s)
 
 	}
 
 	fmt.Println(seeds)
-	fmt.Println(soilToFertilizer)
-	fmt.Println(fertilizerToWater)
-	fmt.Println(waterToLight)
-	fmt.Println(lightToTemperature)
-	fmt.Println(temperatureToHumidity)
-	fmt.Println(humidityToLocation)
+
+	maps := make([][][]int, 0)
+	i := 2
+	for i < len(lines) {
+		m := make([][]int, 0)
+
+		i++
+		for i < len(lines) && lines[i] != "" {
+			rangeData := strings.Split(lines[i], " ")
+			dstStart, _ := strconv.Atoi(rangeData[0])
+			srcStart, _ := strconv.Atoi(rangeData[1])
+			rangeLen, _ := strconv.Atoi(rangeData[2])
+			m = append(m, []int{dstStart, srcStart, rangeLen})
+			i++
+		}
+
+		maps = append(maps, m)
+		i += 1
+	}
+
+	// fmt.Println("MAPPS =>>", maps)
+
+	findLoc := func(seed int) int {
+		curNum := seed
+
+		for _, m := range maps {
+			// fmt.Println("current M ==>", m)
+			for _, rangeData := range m {
+				// fmt.Println("current range data====>", rangeData)
+				dstStart := rangeData[0]
+				srcStart := rangeData[1]
+				rangeLen := rangeData[2]
+				// fmt.Println(dstStart, srcStart, rangeLen)
+				if srcStart <= curNum && curNum < srcStart+rangeLen {
+					curNum = dstStart + (curNum - srcStart)
+					// fmt.Println("currr =====>", curNum)
+					break
+				}
+			}
+		}
+		return curNum
+	}
+
+	locs := make([]int, 0)
+	for _, seed := range seeds {
+		loc := findLoc(seed)
+		locs = append(locs, loc)
+	}
+
+	minLoc := locs[0]
+	for _, loc := range locs {
+		if loc < minLoc {
+			minLoc = loc
+		}
+	}
+
+	fmt.Println("MinLOCone =>", minLoc)
+
+	var refLoc int
+	// locsTwo := make([]int, 0)
+	for i, seed := range seeds {
+		if i%2 == 0 {
+			currSeed := seed
+			currLoop := seeds[i+1] + currSeed
+			// fmt.Println(currSeed, currLoop)
+			for currSeed < currLoop {
+				// fmt.Println(currSeed)
+				loc := findLoc(currSeed)
+				// locsTwo = append(locsTwo, loc)
+				if loc < refLoc || refLoc == 0 {
+					refLoc = loc
+				}
+				currSeed++
+			}
+		}
+	}
+	fmt.Println(refLoc)
+	// minLocTwo := locsTwo[0]
+	// for _, loc := range locsTwo {
+	// 	if loc < minLocTwo {
+	// 		minLocTwo = loc
+	// 	}
+	// }
+	// fmt.Println("mintwo=>", minLocTwo)
 
 }

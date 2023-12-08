@@ -89,7 +89,7 @@ func main() {
 	// fmt.Println(locations)
 
 	partTwoStartPos := []string{}
-	for k := range locations { // <== this induces random start position in the slice therefore cycles are changing everytime. It doesn't affect the result
+	for k := range locations { // <== this induces random start position in the slice therefore each associated cycles are changing position in their slice every run. It doesn't affect the result
 		if k[2] == 'A' {
 			partTwoStartPos = append(partTwoStartPos, k)
 		}

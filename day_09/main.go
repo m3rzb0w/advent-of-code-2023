@@ -61,6 +61,16 @@ func findDigit(sequence [][]int) int {
 	return num
 }
 
+func findDigitPartTwo(sequence [][]int) int {
+	var num int
+	for i := len(sequence) - 1; i >= 0; i-- {
+		firstNum := sequence[i][0]
+		num = firstNum - num
+
+	}
+	return num
+}
+
 var lineSeq [][]int
 var allSequences [][][]int
 
@@ -77,12 +87,15 @@ func main() {
 	// fmt.Println(allSequences)
 	// ans := []int{}
 	var ans int
+	var ansTwo int
 	for _, v := range allSequences {
 		// fmt.Println(v)
 		tmpNum := findDigit(v)
 		ans += tmpNum
 		// ans = append(ans, tmpNum)
+		tmpNumTwo := findDigitPartTwo(v)
+		ansTwo += tmpNumTwo
 	}
-	fmt.Println(ans)
-
+	fmt.Println("Part one =>", ans)
+	fmt.Println("Part two =>", ansTwo)
 }

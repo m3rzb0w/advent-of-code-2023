@@ -84,17 +84,12 @@ func main() {
 		allSequences = append(allSequences, tmp)
 		lineSeq = [][]int{}
 	}
-	// fmt.Println(allSequences)
-	// ans := []int{}
+
 	var ans int
 	var ansTwo int
 	for _, v := range allSequences {
-		// fmt.Println(v)
-		tmpNum := findDigit(v)
-		ans += tmpNum
-		// ans = append(ans, tmpNum)
-		tmpNumTwo := findDigitPartTwo(v)
-		ansTwo += tmpNumTwo
+		ans += findDigit(v)
+		ansTwo += findDigitPartTwo(v)
 	}
 	fmt.Println("Part one =>", ans)
 	fmt.Println("Part two =>", ansTwo)
